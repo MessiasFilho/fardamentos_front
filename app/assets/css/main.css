@@ -1,0 +1,365 @@
+@import "tailwindcss";
+
+/* ─── Design tokens (DESIGN.md) ─────────────────────────────────────────── */
+@theme {
+  /* Interface: strictly black & white */
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-glass-dark: rgb(0 0 0 / 0.08);
+  --color-glass-light: rgb(255 255 255 / 0.16);
+
+  /* Hero / product content gradients (not for chrome) */
+  --color-hero-green: #0dff00;
+  --color-hero-yellow: #ffe600;
+  --color-hero-purple: #7b2fff;
+  --color-hero-pink: #ff2d87;
+
+  /* Typography — fallbacks until figmaSans / figmaMono are loaded */
+  --font-sans: "SF Pro Display", system-ui, helvetica, sans-serif;
+  --font-mono: "SF Mono", menlo, monospace;
+
+  /* Variable-font weight stops */
+  --font-weight-ultralight: 320;
+  --font-weight-light: 330;
+  --font-weight-light-plus: 340;
+  --font-weight-regular: 400;
+  --font-weight-medium: 450;
+  --font-weight-semibold: 480;
+  --font-weight-bold-soft: 540;
+  --font-weight-bold: 700;
+
+  /* Type scale */
+  --text-display: 5.375rem;
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.02em;
+
+  --text-section: 4rem;
+  --text-section--line-height: 1.1;
+  --text-section--letter-spacing: -0.015em;
+
+  --text-subheading: 1.625rem;
+  --text-subheading--line-height: 1.35;
+  --text-subheading--letter-spacing: -0.01em;
+
+  --text-feature: 1.5rem;
+  --text-feature--line-height: 1.45;
+
+  --text-body-lg: 1.25rem;
+  --text-body-lg--line-height: 1.35;
+  --text-body-lg--letter-spacing: -0.007em;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.45;
+  --text-body--letter-spacing: -0.009em;
+
+  --text-body-light: 1.125rem;
+  --text-body-light--line-height: 1.45;
+  --text-body-light--letter-spacing: -0.014em;
+
+  --text-label: 1.125rem;
+  --text-label--line-height: 1.3;
+  --text-label--letter-spacing: 0.03em;
+
+  --text-tag: 0.75rem;
+  --text-tag--line-height: 1;
+  --text-tag--letter-spacing: 0.05em;
+
+  /* Spacing (8px base) */
+  --spacing-px: 1px;
+  --spacing-0\.5: 2px;
+  --spacing-1: 4px;
+  --spacing-1\.5: 4.5px;
+  --spacing-2: 8px;
+  --spacing-2\.5: 10px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-4\.5: 18px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-11\.5: 46px;
+  --spacing-12: 48px;
+  --spacing-12\.5: 50px;
+
+  /* Radius */
+  --radius-minimal: 2px;
+  --radius-subtle: 6px;
+  --radius-comfortable: 8px;
+  --radius-pill: 50px;
+  --radius-full: 50%;
+
+  /* Layout */
+  --container-max: 120rem;
+  --breakpoint-sm: 35rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 60rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 90rem;
+  --breakpoint-3xl: 120rem;
+
+  /* Elevation */
+  --shadow-surface: 0 1px 3px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-elevated: 0 8px 24px rgb(0 0 0 / 0.08), 0 2px 8px rgb(0 0 0 / 0.04);
+
+  /* Focus — dashed, like Figma selection handles */
+  --outline-width-focus: 2px;
+  --outline-style-focus: dashed;
+  --outline-offset-focus: 2px;
+}
+
+/* ─── Base ────────────────────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-ink);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans font-light text-body;
+    font-feature-settings: "kern" 1;
+    font-kerning: normal;
+  }
+
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: var(--outline-width-focus) var(--outline-style-focus) var(--color-ink);
+    outline-offset: var(--outline-offset-focus);
+  }
+
+  a {
+    @apply text-ink underline decoration-1 underline-offset-4;
+    transition: color 0.15s ease;
+  }
+
+  a:hover {
+    @apply text-ink/70;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-feature-settings: "kern" 1;
+    font-kerning: normal;
+  }
+}
+
+/* ─── Typography utilities ───────────────────────────────────────────────── */
+@layer components {
+  .text-display {
+    font-size: var(--text-display);
+    line-height: var(--text-display--line-height);
+    letter-spacing: var(--text-display--letter-spacing);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .text-section {
+    font-size: var(--text-section);
+    line-height: var(--text-section--line-height);
+    letter-spacing: var(--text-section--letter-spacing);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .text-subheading {
+    font-size: var(--text-subheading);
+    line-height: var(--text-subheading--line-height);
+    letter-spacing: var(--text-subheading--letter-spacing);
+    font-weight: var(--font-weight-bold-soft);
+  }
+
+  .text-subheading-light {
+    font-size: var(--text-subheading);
+    line-height: var(--text-subheading--line-height);
+    letter-spacing: var(--text-subheading--letter-spacing);
+    font-weight: var(--font-weight-light-plus);
+  }
+
+  .text-feature-title {
+    font-size: var(--text-feature);
+    line-height: var(--text-feature--line-height);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .text-body-lg {
+    font-size: var(--text-body-lg);
+    line-height: var(--text-body-lg--line-height);
+    letter-spacing: var(--text-body-lg--letter-spacing);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .text-body-light {
+    font-size: var(--text-body-light);
+    line-height: var(--text-body-light--line-height);
+    letter-spacing: var(--text-body-light--letter-spacing);
+    font-weight: var(--font-weight-ultralight);
+  }
+
+  .label-mono {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    line-height: var(--text-label--line-height);
+    letter-spacing: var(--text-label--letter-spacing);
+    font-weight: var(--font-weight-regular);
+    text-transform: uppercase;
+    font-feature-settings: "kern" 1;
+  }
+
+  .tag-mono {
+    font-family: var(--font-mono);
+    font-size: var(--text-tag);
+    line-height: var(--text-tag--line-height);
+    letter-spacing: var(--text-tag--letter-spacing);
+    font-weight: var(--font-weight-regular);
+    text-transform: uppercase;
+    font-feature-settings: "kern" 1;
+  }
+
+  /* ─── Buttons ─────────────────────────────────────────────────────────── */
+  .btn,
+  .btn-black,
+  .btn-black-pill,
+  .btn-white-pill,
+  .btn-glass-dark,
+  .btn-glass-light {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-body--letter-spacing);
+    cursor: pointer;
+    font-feature-settings: "kern" 1;
+    transition: opacity 0.15s ease, background-color 0.15s ease;
+  }
+
+  .btn:disabled,
+  .btn-black:disabled,
+  .btn-black-pill:disabled,
+  .btn-white-pill:disabled,
+  .btn-glass-dark:disabled,
+  .btn-glass-light:disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .btn-black {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    border-radius: var(--radius-full);
+  }
+
+  .btn-black-pill {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    border-radius: var(--radius-pill);
+    padding: 8px 18px 10px;
+  }
+
+  .btn-white-pill {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    border-radius: var(--radius-pill);
+    padding: 8px 18px 10px;
+  }
+
+  .btn-glass-dark {
+    background-color: var(--color-glass-dark);
+    color: var(--color-ink);
+    border-radius: var(--radius-full);
+  }
+
+  .btn-glass-light {
+    background-color: var(--color-glass-light);
+    color: var(--color-paper);
+    border-radius: var(--radius-full);
+  }
+
+  /* ─── Navigation & tabs ───────────────────────────────────────────────── */
+  .nav-link {
+    @apply text-ink no-underline font-medium;
+    letter-spacing: var(--text-body--letter-spacing);
+  }
+
+  .nav-link:hover {
+    @apply text-ink/70;
+  }
+
+  .tab-pill {
+    @apply inline-flex items-center justify-center px-4.5 py-2 text-body font-semibold text-ink;
+    border-radius: var(--radius-pill);
+    letter-spacing: var(--text-body--letter-spacing);
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .tab-pill.is-active {
+    @apply bg-ink text-paper;
+  }
+
+  /* ─── Surfaces ────────────────────────────────────────────────────────── */
+  .surface {
+    @apply bg-paper;
+    border-radius: var(--radius-comfortable);
+  }
+
+  .surface-elevated {
+    background-color: var(--color-paper);
+    border-radius: var(--radius-comfortable);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .card {
+    @apply bg-paper overflow-hidden;
+    border-radius: var(--radius-comfortable);
+  }
+
+  .container-app {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--spacing-4);
+  }
+
+  @media (min-width: 48rem) {
+    .container-app {
+      padding-inline: var(--spacing-6);
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .container-app {
+      padding-inline: var(--spacing-8);
+    }
+  }
+
+  /* ─── Hero gradient (product/content only — not chrome) ───────────────── */
+  .hero-gradient {
+    background: linear-gradient(
+      135deg,
+      var(--color-hero-green) 0%,
+      var(--color-hero-yellow) 28%,
+      var(--color-hero-purple) 62%,
+      var(--color-hero-pink) 100%
+    );
+  }
+
+  .hero-gradient .text-display,
+  .hero-gradient .text-section,
+  .hero-gradient .text-subheading,
+  .hero-gradient p {
+    @apply text-paper;
+  }
+}
