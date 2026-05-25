@@ -5,13 +5,16 @@
     :transition="transitionConfig"
     :while-hover="hoverConfig"
     :while-tap="tapConfig"
-    class="motion-wrapper"
+    class="block w-full"
+    :class="$attrs.class"
   >
     <slot />
   </motion.div>
 </template>
 
 <script setup lang="ts">
+defineOptions({ inheritAttrs: false })
+
 import { computed } from 'vue'
 import { motion } from 'motion-v'
 import type { Easing, VariantType } from 'motion-v'
@@ -135,10 +138,3 @@ const tapConfig = computed((): VariantType | undefined => {
   }
 })
 </script>
-
-<style scoped>
-.motion-wrapper {
-  display: block;
-  width: 100%;
-}
-</style>
