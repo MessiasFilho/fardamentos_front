@@ -1,5 +1,9 @@
 <template>
+  <div v-if="!canAnimate" class="block w-full" :class="$attrs.class">
+    <slot />
+  </div>
   <motion.div
+    v-else
     :initial="initialState"
     :animate="animateState"
     :transition="transitionConfig"
@@ -15,7 +19,7 @@
 <script setup lang="ts">
 defineOptions({ inheritAttrs: false })
 
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { motion } from 'motion-v'
 import type { Easing, VariantType } from 'motion-v'
 import type { MotionComponentProps } from '~/types/motion'
@@ -34,6 +38,12 @@ const props = withDefaults(defineProps<Props>(), {
   hover: false,
   tap: false,
   loop: false,
+})
+
+/** motion-v exige elemento no DOM; no SSR renderizamos div estático até o mount. */
+const canAnimate = ref(false)
+onMounted(() => {
+  canAnimate.value = true
 })
 
 const slideOffsets = {

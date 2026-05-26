@@ -32,10 +32,10 @@
 
             <div class="mt-8 flex flex-wrap gap-3">
               <NuxtLink
-                :to="userStore.isClient ? '/propostas/nova' : '/login?redirect=/propostas/nova'"
+                :to="showAsClient ? '/propostas/nova' : '/login?redirect=/propostas/nova'"
                 :class="ui.btnPrimary"
               >
-                {{ userStore.isClient ? 'Nova proposta' : 'Enviar proposta' }}
+                {{ showAsClient ? 'Nova proposta' : 'Enviar proposta' }}
               </NuxtLink>
               <a href="#portfolio" :class="ui.btnSecondary">Ver portfólio</a>
             </div>
@@ -259,12 +259,12 @@
           </p>
           <div class="mt-8 flex flex-wrap justify-center gap-3">
             <NuxtLink
-              :to="userStore.isClient ? '/propostas/nova' : '/register'"
+              :to="showAsClient ? '/propostas/nova' : '/register'"
               :class="ui.btnPrimary"
             >
-              {{ userStore.isClient ? 'Nova proposta' : 'Criar conta gratuita' }}
+              {{ showAsClient ? 'Nova proposta' : 'Criar conta gratuita' }}
             </NuxtLink>
-            <NuxtLink v-if="!userStore.isClient" to="/login" :class="ui.btnSecondaryOnDark">
+            <NuxtLink v-if="showAsGuest" to="/login" :class="ui.btnSecondaryOnDark">
               Já tenho conta
             </NuxtLink>
           </div>
@@ -277,15 +277,13 @@
 <script setup lang="ts">
 import { usePortfolioStore } from '~/store/portfolio'
 import { usePartnersStore } from '~/store/partners'
-import { useUserStore } from '~/store/user'
-
 definePageMeta({ layout: 'default' })
 useHead({ title: 'Fardamentos · Santiago Camisaria' })
 
 const ui = useSiteUi()
 const portfolio = usePortfolioStore()
 const partners = usePartnersStore()
-const userStore = useUserStore()
+const { showAsClient, showAsGuest } = useClientAuthUi()
 
 const steps = [
   { title: 'Crie sua conta', text: 'Cadastro rápido como PF ou PJ, com seus dados de contato.' },
@@ -303,7 +301,6 @@ const heroStats = computed(() => [
 ])
 
 onMounted(() => {
-  userStore.initFromStorage()
   portfolio.fetch()
   partners.fetch()
 })

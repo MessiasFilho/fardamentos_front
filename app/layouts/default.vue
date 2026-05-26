@@ -27,19 +27,19 @@
           <NuxtLink v-for="link in navLinks" :key="link.to" :to="link.to" :class="ui.navLink">
             {{ link.label }}
           </NuxtLink>
-          <NuxtLink v-if="userStore.isClient" to="/propostas" :class="ui.navLink">
+          <NuxtLink v-if="showAsClient" to="/propostas" :class="ui.navLink">
             Minhas propostas
           </NuxtLink>
         </nav>
 
         <div class="flex items-center gap-sm">
-          <template v-if="userStore.isClient">
+          <template v-if="showAsClient">
             <NuxtLink to="/propostas/nova" :class="[ui.btnPrimary, 'hidden text-sm sm:inline-flex']">
               Nova proposta
             </NuxtLink>
             <button type="button" :class="ui.navLink" @click="logout">Sair</button>
           </template>
-          <template v-else>
+          <template v-else-if="showAsGuest">
             <NuxtLink to="/login" :class="[ui.navLink, 'hidden sm:inline-flex']">Entrar</NuxtLink>
             <NuxtLink to="/register" :class="[ui.btnPrimary, 'text-sm']">Cadastrar</NuxtLink>
           </template>
@@ -71,7 +71,7 @@
           {{ link.label }}
         </NuxtLink>
         <NuxtLink
-          v-if="userStore.isClient"
+          v-if="showAsClient"
           to="/propostas"
           :class="ui.navLink"
           @click="mobileOpen = false"
@@ -79,14 +79,14 @@
           Minhas propostas
         </NuxtLink>
         <NuxtLink
-          v-if="userStore.isClient"
+          v-if="showAsClient"
           to="/propostas/nova"
           :class="[ui.btnPrimary, 'text-center']"
           @click="mobileOpen = false"
         >
           Nova proposta
         </NuxtLink>
-        <template v-else>
+        <template v-else-if="showAsGuest">
           <NuxtLink to="/login" :class="ui.navLink" @click="mobileOpen = false">Entrar</NuxtLink>
           <NuxtLink to="/register" :class="[ui.btnPrimary, 'text-center']" @click="mobileOpen = false">
             Cadastrar
@@ -133,13 +133,13 @@
           <div>
             <p :class="[ui.eyebrow, 'mb-3']">Conta</p>
             <ul class="space-y-2">
-              <li v-if="userStore.isClient">
+              <li v-if="showAsClient">
                 <NuxtLink to="/propostas" :class="ui.footerLink">Minhas propostas</NuxtLink>
               </li>
-              <li v-if="userStore.isClient">
+              <li v-if="showAsClient">
                 <NuxtLink to="/propostas/nova" :class="ui.footerLink">Nova proposta</NuxtLink>
               </li>
-              <template v-else>
+              <template v-else-if="showAsGuest">
                 <li><NuxtLink to="/login" :class="ui.footerLink">Entrar</NuxtLink></li>
                 <li><NuxtLink to="/register" :class="ui.footerLink">Criar conta</NuxtLink></li>
               </template>
@@ -155,10 +155,10 @@
               Cadastre-se, descreva tecido e quantidade — respondemos com proposta detalhada.
             </p>
             <NuxtLink
-              :to="userStore.isClient ? '/propostas/nova' : '/register'"
+              :to="showAsClient ? '/propostas/nova' : '/register'"
               :class="[ui.btnPrimary, 'mt-5 inline-flex']"
             >
-              {{ userStore.isClient ? 'Enviar proposta' : 'Começar agora' }}
+              {{ showAsClient ? 'Enviar proposta' : 'Começar agora' }}
             </NuxtLink>
           </div>
         </MotionComponent>
@@ -172,13 +172,11 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '~/store/user'
-
 const ui = useSiteUi()
 const year = new Date().getFullYear()
 const route = useRoute()
 const router = useRouter()
-const userStore = useUserStore()
+const { showAsClient, showAsGuest, userStore } = useClientAuthUi()
 
 const navLinks = [
   { to: '/#portfolio', label: 'Portfólio' },
@@ -206,7 +204,6 @@ watch(() => route.path, () => {
 })
 
 onMounted(() => {
-  userStore.initFromStorage()
   headerSolid.value = !isHome.value
   window.addEventListener('scroll', onScroll, { passive: true })
   onScroll()
