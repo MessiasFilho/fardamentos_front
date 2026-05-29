@@ -1,23 +1,18 @@
 <template>
-  <div class="min-h-[60vh] bg-canvas-soft py-12 md:py-16">
+  <div class="min-h-[60vh] bg-surface py-section md:py-section-lg">
     <div :class="ui.container">
-      <MotionComponent animation="fade" :duration="0.45">
-        <div class="mb-xxl flex flex-col gap-md sm:flex-row sm:items-center sm:justify-between">
-          <div class="min-w-0">
-            <p :class="[ui.eyebrow, 'mb-1']">Minha conta</p>
-            <h1 class="text-display-xl font-light text-ink">Minhas propostas</h1>
-            <p v-if="userStore.user" class="mt-2 text-body-md text-ink-secondary">
-              Olá, {{ userStore.user.name }}
-            </p>
-          </div>
-          <NuxtLink
-            to="/propostas/nova"
-            :class="[ui.btnPrimary, 'shrink-0']"
-          >
-            Nova proposta
-          </NuxtLink>
+      <div class="mb-xxl flex flex-col gap-md sm:flex-row sm:items-center sm:justify-between">
+        <div class="min-w-0">
+          <p :class="[ui.eyebrow, 'mb-1']">Minha conta</p>
+          <h1 class="text-display-xl font-semibold text-ink">Minhas propostas</h1>
+          <p v-if="userStore.user" class="mt-2 text-body-md text-charcoal">
+            Olá, {{ userStore.user.name }}
+          </p>
         </div>
-      </MotionComponent>
+        <NuxtLink to="/propostas/nova" :class="[ui.btnPrimary, 'shrink-0']">
+          Nova proposta
+        </NuxtLink>
+      </div>
 
       <p v-if="proposalsStore.error" :class="[ui.alertError, 'mb-md']" role="alert">
         {{ proposalsStore.error }}
@@ -27,69 +22,44 @@
         Carregando…
       </div>
 
-      <MotionComponent
+      <div
         v-else-if="proposalsStore.items.length === 0"
-        animation="slide"
-        direction="up"
-        :duration="0.45"
+        :class="[ui.cardHelp, 'mx-auto max-w-card py-16 text-center']"
       >
-        <div :class="[ui.cardFeature, 'mx-auto max-w-card py-16 text-center']">
-          <p class="text-body-lg text-ink-secondary">Você ainda não enviou propostas.</p>
-          <NuxtLink
-            to="/propostas/nova"
-            :class="[ui.btnPrimary, 'mt-6 inline-flex']"
-          >
-            Enviar primeira proposta
-          </NuxtLink>
-        </div>
-      </MotionComponent>
+        <p class="text-body-lg text-ink-secondary">Você ainda não enviou propostas.</p>
+        <NuxtLink to="/propostas/nova" :class="[ui.btnPrimary, 'mt-6 inline-flex']">
+          Enviar primeira proposta
+        </NuxtLink>
+      </div>
 
       <ul v-else class="space-y-4">
         <li
-          v-for="(p, idx) in proposalsStore.items"
+          v-for="p in proposalsStore.items"
           :key="p.id"
           class="list-none"
         >
-          <MotionComponent
-            animation="slide"
-            direction="up"
-            :duration="0.45"
-            :delay="0.05 * (idx % 10)"
-          >
-            <article
-              :class="[
-                ui.cardFeature,
-                'transition-[box-shadow,border-color] hover:border-primary-soft hover:shadow-2',
-              ]"
-            >
-              <div class="flex flex-wrap items-start justify-between gap-md">
-                <div class="min-w-0 flex-1">
-                  <p :class="ui.pillSoft">{{ p.proposalNumber }}</p>
-                  <h2 class="mt-2 text-display-md font-light text-ink">
-                    {{ p.title || 'Proposta de fardamento' }}
-                  </h2>
-                  <p class="mt-2 line-clamp-2 text-body-md text-ink-secondary">
-                    {{ p.description }}
-                  </p>
-                </div>
-                <span
-                  class="shrink-0 rounded-full px-sm py-xs text-micro-cap font-normal uppercase tracking-wide"
-                  :class="statusBadgeClass(p.status)"
-                >
-                  {{ statusLabel(p.status) }}
-                </span>
+          <article :class="ui.cardBase">
+            <div class="flex flex-wrap items-start justify-between gap-md">
+              <div class="min-w-0 flex-1">
+                <p :class="ui.pillSoft">{{ p.proposalNumber }}</p>
+                <h2 class="mt-2 text-display-md font-semibold text-ink">
+                  {{ displayTitle(p) }}
+                </h2>
               </div>
-              <p class="mt-md text-caption text-ink-mute">
-                {{ formatDate(p.createdAt) }}
-                <template v-if="p.quantityEstimate > 0">
-                  ·
-                  <span class="tabular-nums text-body-tabular text-ink-secondary">
-                    ~{{ p.quantityEstimate }} peças
-                  </span>
-                </template>
-              </p>
-            </article>
-          </MotionComponent>
+              <span
+                class="shrink-0 rounded-full px-sm py-xs text-micro-cap font-normal uppercase tracking-wide"
+                :class="statusBadgeClass(p.status)"
+              >
+                {{ statusLabel(p.status) }}
+              </span>
+            </div>
+            <p class="mt-md text-caption text-ink-mute">
+              {{ formatDate(p.createdAt) }}
+              <template v-if="p.quantityEstimate > 0">
+                · ~{{ p.quantityEstimate }} peças
+              </template>
+            </p>
+          </article>
         </li>
       </ul>
     </div>
@@ -98,10 +68,10 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useProposalsStore } from '~/store/proposals'
+import { useProposalsStore, type Proposal } from '~/store/proposals'
 import { useUserStore } from '~/store/user'
 
-definePageMeta({ layout: 'default', middleware: ['client-only'] })
+definePageMeta({ layout: 'default', middleware: ['client-only'], banner: { hide: true } })
 useHead({ title: 'Minhas propostas · Fardamentos' })
 
 const ui = useSiteUi()
@@ -116,6 +86,10 @@ const STATUS_LABELS: Record<string, string> = {
   cancelled: 'Cancelada',
 }
 
+function displayTitle(p: Proposal) {
+  return p.title?.trim() || 'Proposta de fardamento'
+}
+
 function statusLabel(s: string) {
   return STATUS_LABELS[s] ?? s
 }
@@ -123,17 +97,17 @@ function statusLabel(s: string) {
 function statusBadgeClass(s: string) {
   switch (s) {
     case 'received':
-      return 'bg-canvas-cream text-lemon'
+      return 'bg-surface text-steel'
     case 'quoted':
-      return 'bg-primary-bg-subdued text-primary-deep'
+      return 'bg-brand-green-soft text-ink'
     case 'in_production':
-      return 'bg-canvas-soft text-ink-secondary'
+      return 'bg-surface text-charcoal'
     case 'delivered':
-      return 'bg-primary-bg-subdued text-primary-deep'
+      return 'bg-brand-green-soft text-brand-green-deep'
     case 'cancelled':
-      return 'bg-canvas-soft text-ink-mute'
+      return 'bg-surface text-stone'
     default:
-      return 'bg-primary-bg-subdued text-primary-deep'
+      return 'bg-brand-green-soft text-ink'
   }
 }
 

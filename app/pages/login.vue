@@ -8,7 +8,7 @@
 
     <template #footer>
       Ainda não tem conta?
-      <NuxtLink to="/register" class="ml-1 font-normal text-primary no-underline hover:text-primary-deep">
+      <NuxtLink to="/register" class="ml-1 font-medium text-ink no-underline hover:text-brand-green-deep">
         Criar conta
       </NuxtLink>
     </template>

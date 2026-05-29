@@ -45,7 +45,7 @@ export const usePortfolioStore = defineStore('portfolio', {
         }))
       } catch (e: unknown) {
         const err = e as { data?: { error?: string } }
-        this.error = err.data?.error ?? 'Não foi possível carregar o portfólio.'
+        this.error = err.data?.error ?? 'Não foi possível carregar os projetos.'
         this.items = []
       } finally {
         this.loading = false

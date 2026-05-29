@@ -9,7 +9,7 @@
 
     <template #footer>
       Já tem conta?
-      <NuxtLink to="/login" class="ml-1 font-normal text-primary no-underline hover:text-primary-deep">
+      <NuxtLink to="/login" class="ml-1 font-medium text-ink no-underline hover:text-brand-green-deep">
         Entrar
       </NuxtLink>
     </template>

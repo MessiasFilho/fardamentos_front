@@ -18,7 +18,11 @@ export default defineNuxtConfig({
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {
           rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Inter:opsz,wght@8..144,300;8..144,400&display=swap',
+          href: 'https://fonts.googleapis.com/css2?family=Inter:opsz,wght@8..144,400..600&display=swap',
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.css',
         },
       ],
     },

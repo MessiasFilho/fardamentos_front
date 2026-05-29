@@ -1,77 +1,88 @@
 /**
- * Classes Tailwind reutilizáveis — tokens em assets/css/main.css + DESIGN.md
- * Evite max-w-xl / max-w-2xl: com --spacing-* no tema viram 24px/32px e quebram o texto.
- * Use max-w-copy, max-w-section, max-w-narrow, max-w-card.
+ * Classes Tailwind — tokens Mintlify em assets/css/main.css + DESIGN.md
  */
 export function useSiteUi() {
-  const container =
-    'mx-auto w-full max-w-(--container-max) px-lg md:px-xl'
+  const container = 'mx-auto w-full max-w-(--container-max) px-lg md:px-xl'
 
   const eyebrow =
-    'text-micro-cap font-normal uppercase tracking-wide text-ink-mute'
+    'text-micro-cap font-semibold uppercase tracking-wide text-steel'
 
   const pillSoft =
-    'inline-flex rounded-full bg-primary-bg-subdued px-sm py-xs text-micro-cap font-normal uppercase tracking-wide text-primary-deep'
+    'inline-flex rounded-full bg-brand-green-soft px-sm py-xs text-micro-cap font-semibold uppercase tracking-wide text-ink'
 
   const btnPrimary =
-    'inline-flex min-h-10 items-center justify-center gap-sm rounded-full bg-primary px-lg py-sm text-base font-normal text-on-primary no-underline transition-colors hover:bg-primary-deep active:bg-primary-press'
+    'inline-flex min-h-10 items-center justify-center gap-sm rounded-full bg-primary px-5 py-2.5 text-button-md font-medium text-on-primary no-underline transition-colors hover:bg-charcoal active:bg-primary-press'
+
+  const btnAccent =
+    'inline-flex min-h-10 items-center justify-center gap-sm rounded-full bg-brand-green px-5 py-2.5 text-button-md font-medium text-primary no-underline transition-colors hover:bg-brand-green-deep'
 
   const btnSecondary =
-    'inline-flex min-h-10 items-center justify-center gap-sm rounded-full border border-primary bg-canvas px-lg py-sm text-base font-normal text-primary no-underline transition-colors hover:bg-primary-bg-subdued'
+    'inline-flex min-h-10 items-center justify-center gap-sm rounded-full border border-hairline bg-transparent px-5 py-2.5 text-button-md font-medium text-ink no-underline transition-colors hover:bg-surface'
+
+  const btnOnDark =
+    'inline-flex min-h-10 items-center justify-center gap-sm rounded-full bg-on-dark px-5 py-2.5 text-button-md font-medium text-primary no-underline transition-colors hover:bg-white/90'
 
   const btnSecondaryOnDark =
-    'inline-flex min-h-10 items-center justify-center gap-sm rounded-full border border-white/40 bg-transparent px-lg py-sm text-base font-normal text-white no-underline transition-colors hover:bg-white/10'
+    'inline-flex min-h-10 items-center justify-center gap-sm rounded-full border border-white/35 bg-transparent px-5 py-2.5 text-button-md font-medium text-on-dark no-underline transition-colors hover:bg-white/10'
 
   const navLink =
-    'rounded-full px-md py-sm text-body-md font-light text-ink-mute-2 no-underline transition-colors hover:bg-canvas-soft hover:text-ink'
+    'rounded-full px-md py-sm text-body-sm font-medium text-steel no-underline transition-colors hover:bg-surface hover:text-ink'
 
   const footerLink =
-    'text-body-md font-normal text-primary no-underline transition-colors hover:text-primary-deep'
+    'text-body-sm font-normal text-steel no-underline transition-colors hover:text-ink'
 
-  const meshHero =
-    '[background:radial-gradient(ellipse_90%_70%_at_5%_15%,#f5e9d4_0%,transparent_55%),radial-gradient(ellipse_75%_55%_at_35%_25%,#ffb86c_0%,transparent_50%),radial-gradient(ellipse_70%_60%_at_65%_20%,#c4b5fd_0%,transparent_52%),radial-gradient(ellipse_80%_65%_at_95%_35%,#533afd_0%,transparent_45%),radial-gradient(ellipse_55%_45%_at_55%_45%,#ea2261_0%,transparent_40%),radial-gradient(ellipse_50%_40%_at_80%_55%,#f96bee_0%,transparent_38%),linear-gradient(180deg,transparent_0%,#ffffff_72%)]'
+  const heroSky = 'hero-band-sky'
+
+  const cardBase =
+    'rounded-lg border border-hairline bg-canvas p-xl shadow-[var(--shadow-subtle)]'
 
   const cardFeature =
-    'rounded-lg border border-hairline bg-canvas p-xxl shadow-1'
+    'rounded-lg border border-hairline bg-surface p-xxl'
 
-  const formLabel =
-    'mb-xs block text-caption font-normal text-ink-mute'
+  const cardHelp =
+    'rounded-lg border border-hairline bg-canvas p-xl shadow-[var(--shadow-subtle)]'
+
+  const formLabel = 'mb-xs block text-caption font-normal text-steel'
 
   const formInput =
-    'w-full min-h-10 rounded-sm border border-hairline-input bg-canvas px-md py-sm text-body-md text-ink outline-none transition-[border-color,box-shadow] placeholder:text-ink-mute focus:border-primary focus:ring-[3px] focus:ring-primary/12 disabled:cursor-not-allowed disabled:opacity-50'
+    'w-full min-h-10 rounded-md border border-hairline bg-canvas px-md py-sm text-body-md text-ink outline-none transition-[border-color,box-shadow] placeholder:text-stone focus:border-brand-green focus:ring-[3px] focus:ring-brand-green/15 disabled:cursor-not-allowed disabled:opacity-50'
 
   const formTextarea =
-    'w-full min-h-[140px] resize-none rounded-sm border border-hairline-input bg-canvas px-md py-md text-body-md text-ink outline-none transition-[border-color,box-shadow] placeholder:text-ink-mute focus:border-primary focus:ring-[3px] focus:ring-primary/12 disabled:cursor-not-allowed disabled:opacity-50'
+    'w-full min-h-[140px] resize-none rounded-md border border-hairline bg-canvas px-md py-md text-body-md text-ink outline-none transition-[border-color,box-shadow] placeholder:text-stone focus:border-brand-green focus:ring-[3px] focus:ring-brand-green/15 disabled:cursor-not-allowed disabled:opacity-50'
 
   const formSectionTitle =
-    'mb-md text-micro-cap font-normal uppercase tracking-wide text-ink-mute'
+    'mb-md text-micro-cap font-semibold uppercase tracking-wide text-steel'
 
   const alertError =
-    'rounded-md border border-ruby/25 bg-ruby/5 px-md py-sm text-body-md text-ruby'
+    'rounded-md border border-brand-error/25 bg-brand-error/5 px-md py-sm text-body-md text-brand-error'
 
   const alertSuccess =
-    'rounded-md border border-primary/20 bg-primary-bg-subdued px-md py-sm text-body-md text-primary-deep'
+    'rounded-md border border-brand-green/30 bg-brand-green-soft px-md py-sm text-body-md text-ink'
 
   const radioPillBase =
-    'inline-flex min-h-10 cursor-pointer items-center justify-center rounded-full border px-lg py-sm text-body-md transition-colors has-focus-visible:ring-2 has-focus-visible:ring-primary has-focus-visible:ring-offset-2'
+    'inline-flex min-h-10 cursor-pointer items-center justify-center rounded-full border px-lg py-sm text-body-md transition-colors has-focus-visible:ring-2 has-focus-visible:ring-brand-green has-focus-visible:ring-offset-2'
 
   const radioPillIdle =
-    'border-hairline bg-canvas text-ink-mute-2 hover:border-primary-soft hover:text-ink'
+    'border-hairline bg-canvas text-steel hover:border-brand-green/50 hover:text-ink'
 
   const radioPillActive =
-    'border-primary bg-primary-bg-subdued font-normal text-primary-deep'
+    'border-brand-green bg-brand-green-soft font-medium text-ink'
 
   return {
     container,
     eyebrow,
     pillSoft,
     btnPrimary,
+    btnAccent,
     btnSecondary,
+    btnOnDark,
     btnSecondaryOnDark,
     navLink,
     footerLink,
-    meshHero,
+    heroSky,
+    cardBase,
     cardFeature,
+    cardHelp,
     formLabel,
     formInput,
     formTextarea,

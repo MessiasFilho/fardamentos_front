@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
-import type { ProposalBriefForm } from '~/utils/proposalBrief'
-import { buildProposalTitle } from '~/utils/proposalBrief'
+import type { ProposalForm } from '~/utils/proposalBrief'
 import { useUserStore } from '~/store/user'
 
 export interface Proposal {
@@ -9,10 +8,6 @@ export interface Proposal {
   title: string
   description: string
   quantityEstimate: number
-  modelType?: string
-  fabricType?: string
-  hasLogo?: boolean
-  logoFileUrl?: string
   status: string
   createdAt: string
 }
@@ -71,7 +66,7 @@ export const useProposalsStore = defineStore('proposals', {
     },
 
     async create(payload: {
-      form: ProposalBriefForm
+      form: ProposalForm
       logoFile?: File | null
     }) {
       this.submitting = true
@@ -80,23 +75,17 @@ export const useProposalsStore = defineStore('proposals', {
         const token = useUserStore().token
         if (!token) throw new Error('Faça login para continuar.')
 
-        const title = buildProposalTitle(payload.form)
+        const { form, logoFile } = payload
+        const description = form.description.trim()
         const body = new FormData()
-        if (title?.trim()) body.append('title', title.trim())
-        body.append('quantity_estimate', String(payload.form.quantity === '' ? 0 : payload.form.quantity))
-        body.append('model_type', payload.form.modelType)
-        if (payload.form.modelCustom.trim()) body.append('model_custom', payload.form.modelCustom.trim())
-        body.append('fabric_type', payload.form.fabricType)
-        if (payload.form.fabricCustom.trim()) body.append('fabric_custom', payload.form.fabricCustom.trim())
-        if (payload.form.colors.trim()) body.append('colors', payload.form.colors.trim())
-        if (payload.form.hasLogo !== null) body.append('has_logo', payload.form.hasLogo ? 'true' : 'false')
-        if (payload.form.hasLogo === true) {
-          body.append('logo_type', payload.form.logoType)
-          body.append('logo_details', payload.form.logoDetails.trim())
-        }
-        if (payload.form.deadline.trim()) body.append('deadline', payload.form.deadline.trim())
-        if (payload.form.extraNotes.trim()) body.append('extra_notes', payload.form.extraNotes.trim())
-        if (payload.logoFile) body.append('logo_file', payload.logoFile, payload.logoFile.name)
+        const title = form.title.trim()
+        if (title) body.append('title', title)
+        body.append('description', description)
+        body.append(
+          'quantity_estimate',
+          String(form.quantity === '' ? 0 : form.quantity),
+        )
+        if (logoFile) body.append('logo_file', logoFile, logoFile.name)
 
         return await $fetch<{
           message: string
