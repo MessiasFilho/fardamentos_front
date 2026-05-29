@@ -6,7 +6,7 @@
           <p :class="[ui.eyebrow, 'mb-1']">Nova solicitação</p>
           <h1 class="text-display-xl font-light text-ink">Enviar proposta</h1>
           <p class="mt-2 max-w-copy text-body-md text-ink-secondary">
-            Descreva o que você precisa. Quanto mais contexto, mais rápido montamos o orçamento.
+            Escolha o tipo de produto e, se quiser, acrescente detalhes para montarmos o orçamento.
           </p>
         </header>
       </MotionComponent>
@@ -14,27 +14,25 @@
       <MotionComponent animation="slide" direction="up" :duration="0.4">
         <form :class="[ui.cardBase, 'space-y-5']" @submit.prevent="submit">
           <label class="block">
-            <span :class="ui.formLabel">Título (opcional)</span>
-            <input
-              v-model.trim="form.title"
-              type="text"
-              maxlength="255"
-              placeholder="Ex.: Uniformes equipe comercial 2026"
-              :class="ui.formInput"
-            />
+            <span :class="ui.formLabel">Tipo de produto *</span>
+            <select v-model="form.productType" required :class="ui.formInput">
+              <option value="" disabled>Selecione…</option>
+              <option v-for="opt in PROPOSAL_PRODUCT_TYPES" :key="opt.value" :value="opt.value">
+                {{ opt.label }}
+              </option>
+            </select>
           </label>
 
           <label class="block">
-            <span :class="ui.formLabel">O que você precisa? *</span>
+            <span :class="ui.formLabel">O que você precisa? (opcional)</span>
             <p class="mb-sm text-caption text-ink-mute">
-              Modelo, tecido, cores, logo e tamanhos — tudo em um só lugar.
+              Cores, tamanhos, logo, tecido ou outras observações — só se quiser detalhar.
             </p>
             <textarea
               v-model.trim="form.description"
-              rows="8"
-              required
+              rows="6"
               minlength="10"
-              placeholder="Ex.: 30 camisas polo azul marinho, malha PV, bordado no peito esquerdo. Tamanhos: 10 P, 12 M, 8 G…"
+              placeholder="Ex.: 30 peças azul marinho, bordado no peito, tamanhos P ao GG…"
               :class="ui.formTextarea"
             />
           </label>
@@ -50,28 +48,6 @@
               :class="[ui.formInput, 'tabular-nums']"
             />
           </label>
-
-          <div class="block">
-            <span :class="ui.formLabel">Arquivo da logo (PDF, opcional)</span>
-            <p class="mb-sm text-caption text-ink-mute">Máx. 10 MB — vetorizado ou alta resolução.</p>
-            <input
-              ref="logoFileInput"
-              type="file"
-              accept="application/pdf,.pdf"
-              class="block w-full text-body-md text-ink file:mr-md file:rounded-full file:border-0 file:bg-brand-green-soft file:px-md file:py-sm file:text-body-md file:font-medium file:text-ink hover:file:bg-brand-green/20"
-              @change="onLogoFileChange"
-            />
-            <p v-if="logoFile" class="mt-sm text-caption text-ink-secondary">
-              {{ logoFile.name }} ({{ formatFileSize(logoFile.size) }})
-              <button
-                type="button"
-                class="ml-2 text-ink no-underline hover:text-brand-green-deep"
-                @click="clearLogoFile"
-              >
-                Remover
-              </button>
-            </p>
-          </div>
 
           <p v-if="formError" :class="ui.alertError" role="alert">{{ formError }}</p>
           <p v-if="proposalsStore.error" :class="ui.alertError" role="alert">
@@ -99,7 +75,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useProposalsStore } from '~/store/proposals'
-import type { ProposalForm } from '~/utils/proposalBrief'
+import { PROPOSAL_PRODUCT_TYPES, type ProposalForm } from '~/utils/proposalBrief'
 
 definePageMeta({ layout: 'default', middleware: ['client-only'], banner: { hide: true } })
 useHead({ title: 'Nova proposta · Fardamentos' })
@@ -110,66 +86,23 @@ const proposalsStore = useProposalsStore()
 const appAlert = useAppAlert()
 
 const formError = ref('')
-const logoFile = ref<File | null>(null)
-const logoFileInput = ref<HTMLInputElement | null>(null)
-const LOGO_PDF_MAX_BYTES = 10 * 1024 * 1024
 
 const form = reactive<ProposalForm>({
-  title: '',
+  productType: '',
   description: '',
   quantity: '',
 })
 
-function isPdfFile(file: File) {
-  const name = file.name.toLowerCase()
-  return file.type === 'application/pdf' || name.endsWith('.pdf')
-}
-
-function formatFileSize(bytes: number) {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
-
-function onLogoFileChange(event: Event) {
-  formError.value = ''
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0]
-  if (!file) {
-    logoFile.value = null
-    return
-  }
-  if (!isPdfFile(file)) {
-    formError.value = 'Envie apenas arquivo PDF (.pdf).'
-    clearLogoFile()
-    return
-  }
-  if (file.size > LOGO_PDF_MAX_BYTES) {
-    formError.value = 'O PDF deve ter no máximo 10 MB.'
-    clearLogoFile()
-    return
-  }
-  logoFile.value = file
-}
-
-function clearLogoFile() {
-  logoFile.value = null
-  if (logoFileInput.value) logoFileInput.value.value = ''
-}
-
 function validate(): string | null {
+  if (!form.productType) {
+    return 'Selecione o tipo de produto.'
+  }
   const desc = form.description.trim()
-  if (desc.length < 10) {
-    return 'Descreva sua necessidade com pelo menos 10 caracteres.'
+  if (desc.length > 0 && desc.length < 10) {
+    return 'Se usar o campo de detalhes, escreva pelo menos 10 caracteres.'
   }
   if (form.quantity !== '' && Number(form.quantity) < 0) {
     return 'A quantidade não pode ser negativa.'
-  }
-  if (logoFile.value) {
-    if (!isPdfFile(logoFile.value)) return 'O arquivo da logo deve ser PDF.'
-    if (logoFile.value.size > LOGO_PDF_MAX_BYTES) {
-      return 'O PDF da logo deve ter no máximo 10 MB.'
-    }
   }
   return null
 }
@@ -184,10 +117,7 @@ async function submit() {
   }
 
   try {
-    const res = await proposalsStore.create({
-      form,
-      logoFile: logoFile.value,
-    })
+    const res = await proposalsStore.create({ form })
     appAlert.show({
       title: 'Proposta enviada',
       message:

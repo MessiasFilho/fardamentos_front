@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import type { ProposalForm } from '~/utils/proposalBrief'
+import { productTypeLabel } from '~/utils/proposalBrief'
 import { useUserStore } from '~/store/user'
 
 export interface Proposal {
@@ -19,7 +20,10 @@ function getApiBase() {
 function authHeaders() {
   const token = useUserStore().token
   if (!token) throw new Error('Faça login para continuar.')
-  return { Authorization: `Bearer ${token}` }
+  return {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  }
 }
 
 export const useProposalsStore = defineStore('proposals', {
@@ -65,37 +69,25 @@ export const useProposalsStore = defineStore('proposals', {
       }
     },
 
-    async create(payload: {
-      form: ProposalForm
-      logoFile?: File | null
-    }) {
+    async create(payload: { form: ProposalForm }) {
       this.submitting = true
       this.error = ''
       try {
-        const token = useUserStore().token
-        if (!token) throw new Error('Faça login para continuar.')
-
-        const { form, logoFile } = payload
-        const description = form.description.trim()
-        const body = new FormData()
-        const title = form.title.trim()
-        if (title) body.append('title', title)
-        body.append('description', description)
-        body.append(
-          'quantity_estimate',
-          String(form.quantity === '' ? 0 : form.quantity),
-        )
-        if (logoFile) body.append('logo_file', logoFile, logoFile.name)
+        const { form } = payload
+        if (!form.productType) throw new Error('Selecione o tipo de produto.')
 
         return await $fetch<{
           message: string
           proposalNumber: string
-          logoFileUrl?: string
           whatsapp?: { clientNotified?: boolean; warning?: string }
         }>(`${getApiBase()}/api/fardamentos/proposals`, {
           method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
-          body,
+          headers: authHeaders(),
+          body: {
+            title: productTypeLabel(form.productType),
+            description: form.description.trim(),
+            quantity_estimate: form.quantity === '' ? 0 : Number(form.quantity),
+          },
         })
       } catch (e: unknown) {
         const err = e as { data?: { error?: string } }
