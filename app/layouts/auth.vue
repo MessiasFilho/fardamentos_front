@@ -24,7 +24,7 @@
             </span>
           </h2>
           <p class="mt-4 text-body-lg text-ink-secondary">
-            Portfólio real, propostas online e orçamento sob medida para equipes, escolas e empresas.
+            Propostas online e orçamento sob medida para equipes, escolas e empresas.
           </p>
         </div>
 

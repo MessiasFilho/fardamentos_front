@@ -124,7 +124,7 @@
           <div>
             <p :class="[ui.eyebrow, 'mb-3']">Navegação</p>
             <ul class="space-y-2">
-              <li><NuxtLink to="/#portfolio" :class="ui.footerLink">Portfólio</NuxtLink></li>
+              <li><NuxtLink to="/#trabalhos" :class="ui.footerLink">Referências</NuxtLink></li>
               <li><NuxtLink to="/#empresas" :class="ui.footerLink">Empresas</NuxtLink></li>
               <li><NuxtLink to="/#como-funciona" :class="ui.footerLink">Como funciona</NuxtLink></li>
             </ul>
@@ -179,9 +179,10 @@ const router = useRouter()
 const { showAsClient, showAsGuest, userStore } = useClientAuthUi()
 
 const navLinks = [
-  { to: '/#portfolio', label: 'Portfólio' },
   { to: '/#como-funciona', label: 'Como funciona' },
+  { to: '/#trabalhos', label: 'Referências' },
   { to: '/#empresas', label: 'Empresas' },
+  { to: '/#faq', label: 'Dúvidas' },
 ]
 
 const mobileOpen = ref(false)

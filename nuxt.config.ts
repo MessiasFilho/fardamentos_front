@@ -6,7 +6,7 @@ const mod = (process.env.MOD || 'dev').trim().toLowerCase()
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@pinia/nuxt', 'motion-v/nuxt'],
+  modules: ['@pinia/nuxt', 'motion-v/nuxt', 'shadcn-nuxt'],
   pinia: {
     storesDirs: ['./app/store'],
   },
@@ -25,11 +25,18 @@ export default defineNuxtConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: ['@lucide/vue'],
+    },
   },
   runtimeConfig: {
     public: {
       mod,
       apiBase: resolveApiBase(mod),
     },
+  },
+  shadcn: {
+    prefix: '',
+    componentDir: './app/components/ui',
   },
 })
